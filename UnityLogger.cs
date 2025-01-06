@@ -38,7 +38,53 @@ public static class UnityLogger
 #endif
     }
 
+    public static void LogWithTag(string log = "", System.Enum category = null, UnityEngine.Object obj = null, bool autoAddTag = true)
+    {
+        builder.Clear();
+
+        System.Enum foundCategory = category;
+
+        if (autoAddTag && (category == null || category == NonSpecifiedEnum))
+        {
+            stackFrame = new StackFrame(1);
+            extractedType = stackFrame.GetMethod().DeclaringType;
+            foundCategory = GetLogCategory(extractedType);
+        }
+
+        builder.AppendFormat("{0} : {1}", foundCategory, log);
+
+#if !RELEASE_MODE
+        if (obj != null)
+            UnityEngine.Debug.Log(builder, obj);
+        else
+            UnityEngine.Debug.Log(builder);
+#endif
+    }
+
     public static void LogWarningWithTag(System.Enum category = null, string log = "", UnityEngine.Object obj = null, bool autoAddTag = true)
+    {
+        builder.Clear();
+
+        System.Enum foundCategory = category;
+
+        if (autoAddTag && (category == null || category == NonSpecifiedEnum))
+        {
+            stackFrame = new StackFrame(1);
+            extractedType = stackFrame.GetMethod().DeclaringType;
+            foundCategory = GetLogCategory(extractedType);
+        }
+
+        builder.AppendFormat("{0} : {1}", foundCategory, log);
+
+#if !RELEASE_MODE
+        if (obj != null)
+            UnityEngine.Debug.LogWarning(builder, obj);
+        else
+            UnityEngine.Debug.LogWarning(builder);
+#endif
+    }
+
+    public static void LogWarningWithTag(string log = "", System.Enum category = null, UnityEngine.Object obj = null, bool autoAddTag = true)
     {
         builder.Clear();
 
@@ -82,6 +128,26 @@ public static class UnityLogger
             UnityEngine.Debug.LogError(builder);
     }
 
+    public static void LogErrorWithTag(string log = "", System.Enum category = null, UnityEngine.Object obj = null, bool autoAddTag = true)
+    {
+        builder.Clear();
+
+        System.Enum foundCategory = category;
+
+        if (autoAddTag && (category == null || category == NonSpecifiedEnum))
+        {
+            stackFrame = new StackFrame(1);
+            extractedType = stackFrame.GetMethod().DeclaringType;
+            foundCategory = GetLogCategory(extractedType);
+        }
+
+        builder.AppendFormat("{0} : {1}", foundCategory, log);
+
+        if (obj != null)
+            UnityEngine.Debug.LogError(builder, obj);
+        else
+            UnityEngine.Debug.LogError(builder);
+    }
 
     public static void SetNonSpecifiedEnum(System.Enum value) => NonSpecifiedEnum = value;
 
